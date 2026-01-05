@@ -1,0 +1,316 @@
+{
+  "pub": {
+    "login": {
+      "title": "تسجيل الدخول",
+      "email_label": "البريد الإلكتروني للعمل",
+      "password_label": "كلمة المرور",
+      "submit": "دخول",
+      "forgot": "هل نسيت كلمة المرور؟",
+      "domain_blocked": "نطاق البريد الإلكتروني غير مسموح لهذه الجهة."
+    },
+    "forgot": {
+      "title": "إعادة تعيين كلمة المرور",
+      "email_label": "البريد الإلكتروني للعمل",
+      "submit": "إرسال رابط التعيين",
+      "sent": "إذا كان البريد موجودًا، أرسلنا رابط إعادة التعيين."
+    },
+    "reset": {
+      "title": "اختر كلمة مرور جديدة",
+      "password_label": "كلمة المرور الجديدة",
+      "confirm_label": "تأكيد كلمة المرور",
+      "submit": "تحديث كلمة المرور",
+      "success": "تم تحديث كلمة المرور. يمكنك تسجيل الدخول الآن."
+    },
+    "invite": {
+      "title": "قبول الدعوة",
+      "password_label": "إنشاء كلمة مرور",
+      "confirm_label": "تأكيد كلمة المرور",
+      "submit": "إنشاء الحساب"
+    },
+    "maintenance": {
+      "title": "صيانة",
+      "body": "سنعود قريبًا."
+    }
+  },
+  "global": {
+    "search": "بحث",
+    "notifications": "الإشعارات",
+    "points": "النقاط",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "continue": "متابعة",
+    "back": "رجوع",
+    "retry": "إعادة المحاولة",
+    "loading": "جارٍ التحميل…",
+    "offline": "أنت غير متصل. قد تكون بعض المعلومات غير محدثة.",
+    "errors": {
+      "unauthorized": "انتهت الجلسة. يرجى تسجيل الدخول مرة أخرى.",
+      "forbidden": "لا تملك صلاحية الوصول.",
+      "network": "خطأ في الشبكة. حاول مرة أخرى.",
+      "unknown": "حدث خطأ غير متوقع."
+    }
+  },
+  "lrn": {
+    "welcome": {
+      "title": "مرحبًا بك في {{TPL.tenant.name}}",
+      "language_label": "اختر لغتك",
+      "timezone_label": "المنطقة الزمنية",
+      "consent_personalize": "استخدم نتائج الوعي الذاتي لتخصيص التعلّم",
+      "consent_share_manager": "مشاركة نتائج الوعي الذاتي مع مديري",
+      "continue": "متابعة"
+    },
+    "home": {
+      "title": "الرئيسية",
+      "today_card": "خطة اليوم",
+      "open_today": "عرض اليوم",
+      "continue_mission": "متابعة",
+      "knowledge": "المعرفة",
+      "self_awareness": "الوعي الذاتي",
+      "leaderboard": "لوحة الصدارة",
+      "rewards": "المكافآت",
+      "team": "الفريق"
+    },
+    "today": {
+      "title": "اليوم",
+      "empty": "لا توجد مهام مجدولة لليوم.",
+      "refresh": "تحديث"
+    },
+    "journey": {
+      "title": "الرحلة",
+      "day": "اليوم {{TPL.onboarding.day_number}}",
+      "completed_of_total": "المكتمل: {{TPL.journey.completed}} / {{TPL.journey.total}}",
+      "filter": "تصفية"
+    },
+    "mission": {
+      "title": "مهمة",
+      "physical_badge": "مهمة ميدانية",
+      "digital_badge": "مهمة رقمية",
+      "trust_note": "إكمال قائم على الثقة. يمكن للإدارة المراجعة لاحقًا.",
+      "reschedule": "إعادة جدولة",
+      "report_issue": "الإبلاغ عن مشكلة",
+      "mark_complete": "وضع علامة مكتمل",
+      "claim_done": "تأكيد الإنجاز"
+    },
+    "reschedule": {
+      "title": "إعادة جدولة المهمة",
+      "date_label": "تاريخ جديد",
+      "reason_label": "السبب (اختياري)",
+      "apply": "تطبيق"
+    },
+    "attest": {
+      "title": "تأكيد الإكمال",
+      "confirm_label": "أؤكد أنني أنجزت هذه المهمة",
+      "note_label": "ملاحظة (اختياري)",
+      "photo_add": "إضافة صورة (اختياري)",
+      "submit": "إرسال",
+      "success": "تم الإكمال! لقد حصلت على +{{TPL.points.delta}} نقطة."
+    },
+    "notifications": {
+      "title": "الإشعارات",
+      "mark_all": "تحديد الكل كمقروء",
+      "empty": "لا توجد إشعارات بعد."
+    },
+    "search": {
+      "title": "بحث",
+      "placeholder": "ابحث في المهام والمعرفة والمساعدة…",
+      "empty": "لا توجد نتائج."
+    },
+    "knowledge": {
+      "title": "المعرفة",
+      "categories": "التصنيفات",
+      "featured": "مميز",
+      "newest": "الأحدث",
+      "continue": "متابعة التعلّم"
+    },
+    "asset": {
+      "title": "المعرفة",
+      "play": "تشغيل",
+      "mark_complete": "وضع علامة مكتمل",
+      "download": "تنزيل",
+      "language": "اللغة"
+    },
+    "sa": {
+      "title": "الوعي الذاتي",
+      "assessments": "الاختبارات",
+      "start": "بدء",
+      "retry_in": "يمكنك إعادة المحاولة بعد {{TPL.sa.retry_days}} يومًا.",
+      "attempts": "المحاولات",
+      "holistic": "الملف الشامل",
+      "privacy": "الخصوصية والمشاركة"
+    },
+    "sa_runner": {
+      "title": "اختبار",
+      "next": "التالي",
+      "previous": "السابق",
+      "save_exit": "حفظ والخروج",
+      "submit": "إرسال"
+    },
+    "sa_holistic": {
+      "title": "الملف الشامل",
+      "based_on": "استنادًا إلى: {{TPL.sa.version_label}} ({{TPL.sa.completed_at}})",
+      "switch_version": "تبديل الإصدار"
+    },
+    "playground": {
+      "title": "ساحة اللعب",
+      "games": "الألعاب",
+      "challenges": "التحديات"
+    },
+    "career": {
+      "title": "المسار المهني",
+      "path": "المسار",
+      "skills": "المهارات",
+      "recommended": "موصى به لك"
+    },
+    "leaderboard": {
+      "title": "لوحة الصدارة",
+      "timeframe_week": "الأسبوع",
+      "timeframe_month": "الشهر",
+      "timeframe_all": "كل الوقت",
+      "scope_team": "الفريق",
+      "scope_cohort": "المجموعة",
+      "scope_tenant": "الشركة",
+      "my_rank": "ترتيبي"
+    },
+    "points": {
+      "title": "سجل النقاط",
+      "balance": "الرصيد",
+      "earned": "المكتسب",
+      "spent": "المصروف",
+      "empty": "لا يوجد نشاط نقاط بعد."
+    },
+    "rewards": {
+      "title": "متجر المكافآت",
+      "my": {
+        "title": "مكافآتي"
+      },
+      "disabled": "المكافآت غير مفعّلة لجهتك."
+    },
+    "reward": {
+      "title": "مكافأة",
+      "cost": "التكلفة",
+      "stock": "المخزون",
+      "redeem": "استبدال",
+      "confirm": "تأكيد الاستبدال",
+      "insufficient_points": "لا تملك نقاطًا كافية لاستبدال هذه المكافأة.",
+      "out_of_stock": "هذه المكافأة غير متاحة حاليًا."
+    },
+    "profile": {
+      "title": "الملف الشخصي",
+      "edit": "تعديل الملف",
+      "photo_optional": "صورة الملف (اختيارية)",
+      "settings": "الإعدادات",
+      "logout": "تسجيل الخروج"
+    },
+    "settings": {
+      "title": "الإعدادات",
+      "language": "اللغة",
+      "notifications": "الإشعارات",
+      "leaderboard_optout": "إخفاء اسمي من لوحة الصدارة",
+      "sa_sharing": "مشاركة الوعي الذاتي",
+      "about": "حول"
+    },
+    "language": {
+      "title": "اللغة والمنطقة",
+      "english": "الإنجليزية",
+      "arabic": "العربية"
+    },
+    "nawras": {
+      "title": "نورس",
+      "placeholder": "اسأل سؤالًا…",
+      "send": "إرسال",
+      "feedback_good": "مفيد",
+      "feedback_bad": "غير مفيد"
+    }
+  },
+  "mgr": {
+    "team": {
+      "title": "الفريق",
+      "nudge": "تنبيه",
+      "reports": "تقارير",
+      "empty": "لا يوجد أعضاء فريق مخصصون."
+    },
+    "member": {
+      "title": "عضو الفريق",
+      "progress": "التقدم",
+      "tasks_due": "المهام المستحقة",
+      "open_profile": "فتح الملف"
+    },
+    "reports": {
+      "title": "تقارير الفريق",
+      "export": "تصدير"
+    },
+    "nudge": {
+      "title": "إرسال تنبيه",
+      "message_label": "الرسالة",
+      "send": "إرسال"
+    }
+  },
+  "adm": {
+    "dashboard": {
+      "title": "لوحة التحكم"
+    },
+    "users": {
+      "title": "المستخدمون"
+    },
+    "cohorts": {
+      "title": "المجموعات والفرق"
+    },
+    "journeys": {
+      "title": "الرحلات"
+    },
+    "journey_builder": {
+      "title": "بناء الرحلة"
+    },
+    "mission_templates": {
+      "title": "قوالب المهام"
+    },
+    "knowledge": {
+      "title": "قاعدة المعرفة"
+    },
+    "asset_editor": {
+      "title": "محرر المحتوى"
+    },
+    "approvals": {
+      "title": "الموافقات"
+    },
+    "scheduling": {
+      "title": "الجدولة"
+    },
+    "gamification": {
+      "title": "التلعيب"
+    },
+    "rewards": {
+      "title": "المكافآت"
+    },
+    "redemptions": {
+      "title": "طلبات الاستبدال"
+    },
+    "claims": {
+      "title": "مطالبات المهام"
+    },
+    "settings": {
+      "language": {
+        "title": "إعدادات اللغة"
+      },
+      "security": {
+        "title": "إعدادات الأمان"
+      }
+    },
+    "audit": {
+      "title": "سجل التدقيق"
+    },
+    "ai": {
+      "input": {
+        "title": "منشئ الذكاء الاصطناعي — الإدخال"
+      },
+      "inventory": {
+        "title": "منشئ الذكاء الاصطناعي — الجرد"
+      },
+      "blueprint": {
+        "title": "منشئ الذكاء الاصطناعي — المخطط"
+      }
+    }
+  }
+}

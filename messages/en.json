@@ -1,0 +1,316 @@
+{
+  "pub": {
+    "login": {
+      "title": "Log in",
+      "email_label": "Work email",
+      "password_label": "Password",
+      "submit": "Log in",
+      "forgot": "Forgot password?",
+      "domain_blocked": "This email domain is not allowed for this organization."
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "email_label": "Work email",
+      "submit": "Send reset link",
+      "sent": "If this email exists, we sent a reset link."
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "password_label": "New password",
+      "confirm_label": "Confirm password",
+      "submit": "Update password",
+      "success": "Password updated. You can log in now."
+    },
+    "invite": {
+      "title": "Accept invite",
+      "password_label": "Create password",
+      "confirm_label": "Confirm password",
+      "submit": "Create account"
+    },
+    "maintenance": {
+      "title": "Maintenance",
+      "body": "We’ll be back soon."
+    }
+  },
+  "global": {
+    "search": "Search",
+    "notifications": "Notifications",
+    "points": "Points",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "back": "Back",
+    "retry": "Retry",
+    "loading": "Loading…",
+    "offline": "You’re offline. Some information may be outdated.",
+    "errors": {
+      "unauthorized": "Session expired. Please log in again.",
+      "forbidden": "You don’t have access to this.",
+      "network": "Network error. Please try again.",
+      "unknown": "Something went wrong."
+    }
+  },
+  "lrn": {
+    "welcome": {
+      "title": "Welcome to {{TPL.tenant.name}}",
+      "language_label": "Choose your language",
+      "timezone_label": "Timezone",
+      "consent_personalize": "Use my Self Awareness results to personalize learning",
+      "consent_share_manager": "Share my Self Awareness results with my manager",
+      "continue": "Continue"
+    },
+    "home": {
+      "title": "Home",
+      "today_card": "Today’s plan",
+      "open_today": "View today",
+      "continue_mission": "Continue",
+      "knowledge": "Knowledge",
+      "self_awareness": "Self Awareness",
+      "leaderboard": "Leaderboard",
+      "rewards": "Rewards",
+      "team": "Team"
+    },
+    "today": {
+      "title": "Today",
+      "empty": "No tasks scheduled for today.",
+      "refresh": "Refresh"
+    },
+    "journey": {
+      "title": "Journey",
+      "day": "Day {{TPL.onboarding.day_number}}",
+      "completed_of_total": "Completed: {{TPL.journey.completed}} / {{TPL.journey.total}}",
+      "filter": "Filter"
+    },
+    "mission": {
+      "title": "Mission",
+      "physical_badge": "Physical task",
+      "digital_badge": "Digital task",
+      "trust_note": "Trust-based completion. Admins may review later.",
+      "reschedule": "Reschedule",
+      "report_issue": "Report issue",
+      "mark_complete": "Mark complete",
+      "claim_done": "Claim done"
+    },
+    "reschedule": {
+      "title": "Reschedule task",
+      "date_label": "New date",
+      "reason_label": "Reason (optional)",
+      "apply": "Apply"
+    },
+    "attest": {
+      "title": "Confirm completion",
+      "confirm_label": "I confirm I completed this task",
+      "note_label": "Note (optional)",
+      "photo_add": "Add photo (optional)",
+      "submit": "Submit",
+      "success": "Completed! You earned +{{TPL.points.delta}} points."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "mark_all": "Mark all as read",
+      "empty": "No notifications yet."
+    },
+    "search": {
+      "title": "Search",
+      "placeholder": "Search missions, knowledge, help…",
+      "empty": "No results."
+    },
+    "knowledge": {
+      "title": "Knowledge",
+      "categories": "Categories",
+      "featured": "Featured",
+      "newest": "Newest",
+      "continue": "Continue learning"
+    },
+    "asset": {
+      "title": "Knowledge",
+      "play": "Play",
+      "mark_complete": "Mark complete",
+      "download": "Download",
+      "language": "Language"
+    },
+    "sa": {
+      "title": "Self Awareness",
+      "assessments": "Assessments",
+      "start": "Start",
+      "retry_in": "You can retake this in {{TPL.sa.retry_days}} days.",
+      "attempts": "Attempts",
+      "holistic": "Holistic profile",
+      "privacy": "Privacy & sharing"
+    },
+    "sa_runner": {
+      "title": "Assessment",
+      "next": "Next",
+      "previous": "Previous",
+      "save_exit": "Save & exit",
+      "submit": "Submit"
+    },
+    "sa_holistic": {
+      "title": "Holistic profile",
+      "based_on": "Based on: {{TPL.sa.version_label}} ({{TPL.sa.completed_at}})",
+      "switch_version": "Switch version"
+    },
+    "playground": {
+      "title": "Playground",
+      "games": "Games",
+      "challenges": "Challenges"
+    },
+    "career": {
+      "title": "Career",
+      "path": "Career path",
+      "skills": "Skills",
+      "recommended": "Recommended for you"
+    },
+    "leaderboard": {
+      "title": "Leaderboard",
+      "timeframe_week": "Week",
+      "timeframe_month": "Month",
+      "timeframe_all": "All time",
+      "scope_team": "Team",
+      "scope_cohort": "Cohort",
+      "scope_tenant": "Company",
+      "my_rank": "My rank"
+    },
+    "points": {
+      "title": "Points history",
+      "balance": "Balance",
+      "earned": "Earned",
+      "spent": "Spent",
+      "empty": "No points activity yet."
+    },
+    "rewards": {
+      "title": "Rewards store",
+      "my": {
+        "title": "My rewards"
+      },
+      "disabled": "Rewards are not enabled for your organization."
+    },
+    "reward": {
+      "title": "Reward",
+      "cost": "Cost",
+      "stock": "Stock",
+      "redeem": "Redeem",
+      "confirm": "Confirm redemption",
+      "insufficient_points": "You don’t have enough points to redeem this reward.",
+      "out_of_stock": "This reward is currently out of stock."
+    },
+    "profile": {
+      "title": "Profile",
+      "edit": "Edit profile",
+      "photo_optional": "Profile photo (optional)",
+      "settings": "Settings",
+      "logout": "Log out"
+    },
+    "settings": {
+      "title": "Settings",
+      "language": "Language",
+      "notifications": "Notifications",
+      "leaderboard_optout": "Opt out of leaderboard",
+      "sa_sharing": "Self Awareness sharing",
+      "about": "About"
+    },
+    "language": {
+      "title": "Language & region",
+      "english": "English",
+      "arabic": "Arabic"
+    },
+    "nawras": {
+      "title": "Nawras",
+      "placeholder": "Ask a question…",
+      "send": "Send",
+      "feedback_good": "Helpful",
+      "feedback_bad": "Not helpful"
+    }
+  },
+  "mgr": {
+    "team": {
+      "title": "Team",
+      "nudge": "Nudge",
+      "reports": "Reports",
+      "empty": "No team members assigned."
+    },
+    "member": {
+      "title": "Team member",
+      "progress": "Progress",
+      "tasks_due": "Tasks due",
+      "open_profile": "Open profile"
+    },
+    "reports": {
+      "title": "Team reports",
+      "export": "Export"
+    },
+    "nudge": {
+      "title": "Send nudge",
+      "message_label": "Message",
+      "send": "Send"
+    }
+  },
+  "adm": {
+    "dashboard": {
+      "title": "Dashboard"
+    },
+    "users": {
+      "title": "Users"
+    },
+    "cohorts": {
+      "title": "Cohorts & teams"
+    },
+    "journeys": {
+      "title": "Journeys"
+    },
+    "journey_builder": {
+      "title": "Journey builder"
+    },
+    "mission_templates": {
+      "title": "Mission templates"
+    },
+    "knowledge": {
+      "title": "Knowledge base"
+    },
+    "asset_editor": {
+      "title": "Asset editor"
+    },
+    "approvals": {
+      "title": "Approvals"
+    },
+    "scheduling": {
+      "title": "Scheduling"
+    },
+    "gamification": {
+      "title": "Gamification"
+    },
+    "rewards": {
+      "title": "Rewards"
+    },
+    "redemptions": {
+      "title": "Redemptions"
+    },
+    "claims": {
+      "title": "Task claims"
+    },
+    "settings": {
+      "language": {
+        "title": "Language settings"
+      },
+      "security": {
+        "title": "Security settings"
+      }
+    },
+    "audit": {
+      "title": "Audit log"
+    },
+    "ai": {
+      "input": {
+        "title": "AI Builder — Input"
+      },
+      "inventory": {
+        "title": "AI Builder — Inventory"
+      },
+      "blueprint": {
+        "title": "AI Builder — Blueprint"
+      }
+    }
+  }
+}

@@ -1,0 +1,1679 @@
+openapi: 3.1.0
+info:
+  title: Goldinkollar API
+  version: 1.2.0
+  description: 'Contract-first API for the Goldinkollar onboarding platform.
+
+    Canonical UI mappings are in ROUTES.md and CLICKMAP.md.
+
+    '
+servers:
+- url: https://api.example.com
+security:
+- bearerAuth: []
+tags:
+- name: Auth
+- name: Me
+- name: Learner
+- name: Knowledge
+- name: SelfAwareness
+- name: Points
+- name: Leaderboard
+- name: Rewards
+- name: Manager
+- name: Admin
+- name: Uploads
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UUID:
+      type: string
+      description: UUID string (app may generate UUIDv7)
+      examples:
+      - 0193b7f2-aaaa-bbbb-cccc-111111111111
+    ErrorResponse:
+      type: object
+      required:
+      - error_code
+      - message
+      properties:
+        error_code:
+          type: string
+          examples:
+          - ERR.AUTH.DOMAIN_NOT_ALLOWED
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+    Me:
+      type: object
+      required:
+      - user_id
+      - tenant_id
+      - email
+      - roles
+      - language
+      - timezone
+      properties:
+        user_id:
+          $ref: '#/components/schemas/UUID'
+        tenant_id:
+          $ref: '#/components/schemas/UUID'
+        email:
+          type: string
+        first_name:
+          type: string
+          nullable: true
+        last_name:
+          type: string
+          nullable: true
+        roles:
+          type: array
+          items:
+            type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        language:
+          type: string
+          enum:
+          - en
+          - ar
+        timezone:
+          type: string
+          examples:
+          - Asia/Riyadh
+          - UTC
+        points_balance:
+          type: integer
+          examples:
+          - 120
+        is_manager:
+          type: boolean
+        feature_flags:
+          type: object
+          additionalProperties:
+            type: boolean
+    TodayPlan:
+      type: object
+      required:
+      - date
+      - tasks
+      properties:
+        date:
+          type: string
+          format: date
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMissionSummary'
+    UserMissionSummary:
+      type: object
+      required:
+      - user_mission_id
+      - title
+      - due_date
+      - mission_type
+      - completion_mode
+      - points
+      properties:
+        user_mission_id:
+          $ref: '#/components/schemas/UUID'
+        title:
+          type: string
+        due_date:
+          type: string
+          format: date
+        mission_type:
+          type: string
+          enum:
+          - digital
+          - physical
+          - physical_task
+          - microlearning_task
+        completion_mode:
+          type: string
+          enum:
+          - system_tracked
+          - user_attestation_trusted
+          - manager_approval
+        points:
+          type: integer
+        status:
+          type: string
+          enum:
+          - not_started
+          - in_progress
+          - completed
+          - overdue
+          - revoked
+    UserMissionDetail:
+      type: object
+      required:
+      - user_mission_id
+      - title
+      - description
+      - steps
+      - mission_type
+      - completion_mode
+      - points
+      - status
+      properties:
+        user_mission_id:
+          $ref: '#/components/schemas/UUID'
+        title:
+          type: string
+        description:
+          type: string
+        mission_type:
+          type: string
+          enum:
+          - digital
+          - physical
+          - physical_task
+          - microlearning_task
+        completion_mode:
+          type: string
+          enum:
+          - system_tracked
+          - user_attestation_trusted
+          - manager_approval
+        points:
+          type: integer
+        status:
+          type: string
+          enum:
+          - not_started
+          - in_progress
+          - completed
+          - overdue
+          - revoked
+        due_date:
+          type: string
+          format: date
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/MissionStep'
+        evidence_requirements:
+          type: object
+          properties:
+            photo_required:
+              type: boolean
+            note_required:
+              type: boolean
+            allowed_attachment_types:
+              type: array
+              items:
+                type: string
+    MissionStep:
+      type: object
+      required:
+      - step_id
+      - step_type
+      - title
+      - status
+      properties:
+        step_id:
+          $ref: '#/components/schemas/UUID'
+        step_type:
+          type: string
+          enum:
+          - video_asset
+          - article_asset
+          - pdf_asset
+          - quiz
+          - flashcards
+          - attestation
+        title:
+          type: string
+        asset_id:
+          $ref: '#/components/schemas/UUID'
+        status:
+          type: string
+          enum:
+          - not_started
+          - in_progress
+          - completed
+        completion_rules:
+          type: object
+          properties:
+            video_watch_threshold:
+              type: number
+              minimum: 0
+              maximum: 1
+              examples:
+              - 0.8
+    KnowledgeAsset:
+      type: object
+      required:
+      - asset_id
+      - title
+      - asset_type
+      - language
+      - published
+      properties:
+        asset_id:
+          $ref: '#/components/schemas/UUID'
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        asset_type:
+          type: string
+          enum:
+          - video
+          - article
+          - pdf
+          - flashcards
+        language:
+          type: string
+          enum:
+          - en
+          - ar
+        published:
+          type: boolean
+        duration_seconds:
+          type: integer
+          nullable: true
+        download_allowed:
+          type: boolean
+    UploadCreateRequest:
+      type: object
+      required:
+      - file_name
+      - mime_type
+      - size_bytes
+      properties:
+        file_name:
+          type: string
+        mime_type:
+          type: string
+        size_bytes:
+          type: integer
+    UploadCreateResponse:
+      type: object
+      required:
+      - upload_id
+      - upload_url
+      - headers
+      properties:
+        upload_id:
+          $ref: '#/components/schemas/UUID'
+        upload_url:
+          type: string
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+    PointsTransaction:
+      type: object
+      required:
+      - tx_id
+      - created_at
+      - delta
+      - balance_after
+      - reason_type
+      properties:
+        tx_id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          type: string
+          format: date-time
+        delta:
+          type: integer
+        balance_after:
+          type: integer
+        reason_type:
+          type: string
+          enum:
+          - mission_complete
+          - knowledge_complete
+          - assessment_complete
+          - claim_revoke
+          - reward_redeem
+          - admin_adjust
+          - reversal
+        ref_id:
+          $ref: '#/components/schemas/UUID'
+        status:
+          type: string
+          enum:
+          - active
+          - reversed
+        reversal_of_tx_id:
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          nullable: true
+    LeaderboardEntry:
+      type: object
+      required:
+      - user_id
+      - display_name
+      - points_earned
+      - rank
+      properties:
+        user_id:
+          $ref: '#/components/schemas/UUID'
+        display_name:
+          type: string
+        points_earned:
+          type: integer
+        rank:
+          type: integer
+    LeaderboardResponse:
+      type: object
+      required:
+      - timeframe
+      - scope
+      - entries
+      - my_rank
+      properties:
+        timeframe:
+          type: string
+          enum:
+          - weekly
+          - monthly
+          - all_time
+        scope:
+          type: string
+          enum:
+          - tenant
+          - cohort
+          - team
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeaderboardEntry'
+        my_rank:
+          type: object
+          properties:
+            rank:
+              type: integer
+            points_earned:
+              type: integer
+    RewardItem:
+      type: object
+      required:
+      - reward_id
+      - title
+      - cost_points
+      - in_stock
+      - published
+      properties:
+        reward_id:
+          $ref: '#/components/schemas/UUID'
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        cost_points:
+          type: integer
+        in_stock:
+          type: boolean
+        stock_count:
+          type: integer
+          nullable: true
+        published:
+          type: boolean
+    RewardRedemption:
+      type: object
+      required:
+      - redemption_id
+      - reward_id
+      - status
+      - created_at
+      - cost_points
+      properties:
+        redemption_id:
+          $ref: '#/components/schemas/UUID'
+        reward_id:
+          $ref: '#/components/schemas/UUID'
+        status:
+          type: string
+          enum:
+          - pending
+          - fulfilled
+          - rejected
+          - cancelled
+        created_at:
+          type: string
+          format: date-time
+        cost_points:
+          type: integer
+        notes:
+          type: string
+          nullable: true
+    TaskClaim:
+      type: object
+      required:
+      - claim_id
+      - user_mission_id
+      - user_id
+      - status
+      - created_at
+      properties:
+        claim_id:
+          $ref: '#/components/schemas/UUID'
+        user_mission_id:
+          $ref: '#/components/schemas/UUID'
+        user_id:
+          $ref: '#/components/schemas/UUID'
+        note:
+          type: string
+          nullable: true
+        evidence_upload_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/UUID'
+        status:
+          type: string
+          enum:
+          - unreviewed
+          - kept
+          - revoked
+        reviewed_by:
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          nullable: true
+        reviewed_at:
+          type: string
+          format: date-time
+          nullable: true
+        revoke_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    LeaderboardPolicy:
+      type: object
+      required:
+      - leaderboard_enabled
+      - timeframes_enabled
+      - scopes_enabled
+      - privacy_mode
+      - allow_user_opt_out
+      - default_scope
+      - default_timeframe
+      properties:
+        leaderboard_enabled:
+          type: boolean
+        timeframes_enabled:
+          type: array
+          items:
+            type: string
+            enum:
+            - weekly
+            - monthly
+            - all_time
+        scopes_enabled:
+          type: array
+          items:
+            type: string
+            enum:
+            - tenant
+            - cohort
+            - team
+        privacy_mode:
+          type: string
+          enum:
+          - full_name
+          - first_name_last_initial
+          - nickname_only
+        allow_user_opt_out:
+          type: boolean
+        default_scope:
+          type: string
+          enum:
+          - tenant
+          - cohort
+          - team
+        default_timeframe:
+          type: string
+          enum:
+          - weekly
+          - monthly
+          - all_time
+    ContinueResponse:
+      type: object
+      required:
+      - next_mission
+      properties:
+        next_mission:
+          $ref: '#/components/schemas/UserMissionSummary'
+    SignedUrlResponse:
+      type: object
+      required:
+      - url
+      - expires_at
+      properties:
+        url:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+    IssueReportRequest:
+      type: object
+      required:
+      - user_mission_id
+      - message
+      properties:
+        user_mission_id:
+          $ref: '#/components/schemas/UUID'
+        category:
+          type: string
+          nullable: true
+        message:
+          type: string
+    SelfAwarenessAssessment:
+      type: object
+      required:
+      - assessment_id
+      - title
+      - language
+      - published
+      properties:
+        assessment_id:
+          $ref: '#/components/schemas/UUID'
+        title:
+          type: string
+        language:
+          type: string
+          enum:
+          - en
+          - ar
+        published:
+          type: boolean
+    SelfAwarenessInstance:
+      type: object
+      required:
+      - instance_id
+      - assessment_id
+      - version_index
+      - status
+      - started_at
+      properties:
+        instance_id:
+          $ref: '#/components/schemas/UUID'
+        assessment_id:
+          $ref: '#/components/schemas/UUID'
+        version_index:
+          type: integer
+        status:
+          type: string
+          enum:
+          - in_progress
+          - completed
+        started_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        result_json:
+          type: object
+          additionalProperties: true
+          nullable: true
+    SelfAwarenessStartResponse:
+      type: object
+      required:
+      - instance
+      properties:
+        instance:
+          $ref: '#/components/schemas/SelfAwarenessInstance'
+    SelfAwarenessAnswerRequest:
+      type: object
+      required:
+      - question_key
+      - answer_value
+      properties:
+        question_key:
+          type: string
+        answer_value:
+          type: object
+          additionalProperties: true
+    SelfAwarenessHolisticResponse:
+      type: object
+      required:
+      - based_on_instances
+      - summary
+      properties:
+        based_on_instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/SelfAwarenessInstance'
+        summary:
+          type: string
+        recommendations:
+          type: array
+          items:
+            type: string
+          nullable: true
+    SelfAwarenessSettingsPatch:
+      type: object
+      properties:
+        consent_personalize:
+          type: boolean
+        consent_share_manager:
+          type: boolean
+paths:
+  /v1/auth/login:
+    post:
+      tags:
+      - Auth
+      operationId: API-AUTH-LOGIN
+      summary: Login with email/password (domain restricted)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - access_token
+                - me
+                properties:
+                  access_token:
+                    type: string
+                  me:
+                    $ref: '#/components/schemas/Me'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Domain not allowed / user disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/auth/refresh:
+    post:
+      tags:
+      - Auth
+      operationId: API-AUTH-REFRESH
+      summary: Refresh access token (refresh cookie)
+      security: []
+      responses:
+        '200':
+          description: New token
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - access_token
+                properties:
+                  access_token:
+                    type: string
+  /v1/me:
+    get:
+      tags:
+      - Me
+      operationId: API-ME-GET
+      summary: Get current user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Me'
+    patch:
+      tags:
+      - Me
+      operationId: API-ME-PATCH
+      summary: Update profile/settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                language:
+                  type: string
+                  enum:
+                  - en
+                  - ar
+                timezone:
+                  type: string
+                profile_photo_upload_id:
+                  $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Me'
+  /v1/uploads:
+    post:
+      tags:
+      - Uploads
+      operationId: API-UPLOADS-CREATE
+      summary: Create an upload and return a signed URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadCreateRequest'
+      responses:
+        '200':
+          description: Upload created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadCreateResponse'
+  /v1/today_plan:
+    get:
+      tags:
+      - Learner
+      operationId: API-LRN-TODAY-GET
+      summary: Get today's plan (tasks)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodayPlan'
+  /v1/user_missions/{user_mission_id}:
+    get:
+      tags:
+      - Learner
+      operationId: API-LRN-UM-GET
+      summary: Get mission detail
+      parameters:
+      - in: path
+        name: user_mission_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMissionDetail'
+  /v1/user_missions/{user_mission_id}/complete:
+    post:
+      tags:
+      - Learner
+      operationId: API-LRN-UM-COMPLETE
+      summary: Complete a mission (system-tracked, after steps complete)
+      parameters:
+      - in: path
+        name: user_mission_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Completed + points awarded
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - user_mission
+                - points_tx
+                properties:
+                  user_mission:
+                    $ref: '#/components/schemas/UserMissionDetail'
+                  points_tx:
+                    $ref: '#/components/schemas/PointsTransaction'
+        '409':
+          description: Already completed / not eligible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/user_missions/{user_mission_id}/reschedule:
+    post:
+      tags:
+      - Learner
+      operationId: API-LRN-UM-RESCHEDULE
+      summary: Reschedule mission due date
+      parameters:
+      - in: path
+        name: user_mission_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - new_due_date
+              properties:
+                new_due_date:
+                  type: string
+                  format: date
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Rescheduled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMissionDetail'
+        '409':
+          description: Out of policy / already completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/user_missions/{user_mission_id}/attest_complete:
+    post:
+      tags:
+      - Learner
+      operationId: API-LRN-UM-ATTEST
+      summary: Attest completion (trust-based)
+      parameters:
+      - in: path
+        name: user_mission_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - confirm
+              properties:
+                confirm:
+                  type: boolean
+                note:
+                  type: string
+                evidence_upload_ids:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Completed + points awarded + claim created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - user_mission
+                - points_tx
+                - claim
+                properties:
+                  user_mission:
+                    $ref: '#/components/schemas/UserMissionDetail'
+                  points_tx:
+                    $ref: '#/components/schemas/PointsTransaction'
+                  claim:
+                    $ref: '#/components/schemas/TaskClaim'
+  /v1/knowledge_assets:
+    get:
+      tags:
+      - Knowledge
+      operationId: API-LRN-KB-LIST
+      summary: List knowledge assets
+      parameters:
+      - in: query
+        name: q
+        schema:
+          type: string
+      - in: query
+        name: language
+        schema:
+          type: string
+          enum:
+          - en
+          - ar
+      - in: query
+        name: category_id
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/KnowledgeAsset'
+  /v1/knowledge_assets/{asset_id}:
+    get:
+      tags:
+      - Knowledge
+      operationId: API-LRN-ASSET-DETAIL
+      summary: Asset detail
+      parameters:
+      - in: path
+        name: asset_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeAsset'
+  /v1/knowledge_assets/{asset_id}/progress:
+    post:
+      tags:
+      - Knowledge
+      operationId: API-LRN-ASSET-PROGRESS
+      summary: Report asset progress (video heartbeat)
+      parameters:
+      - in: path
+        name: asset_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - event_type
+              properties:
+                event_type:
+                  type: string
+                  enum:
+                  - heartbeat
+                  - complete
+                position_seconds:
+                  type: integer
+                duration_seconds:
+                  type: integer
+                watched_percent:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  completed:
+                    type: boolean
+  /v1/knowledge_assets/{asset_id}/complete:
+    post:
+      tags:
+      - Knowledge
+      operationId: API-LRN-ASSET-COMPLETE
+      summary: Mark a non-video asset as complete (article/pdf)
+      parameters:
+      - in: path
+        name: asset_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Completed
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - completed
+                properties:
+                  completed:
+                    type: boolean
+  /v1/points/history:
+    get:
+      tags:
+      - Points
+      operationId: API-LRN-POINTS-HISTORY
+      summary: Points transactions
+      parameters:
+      - in: query
+        name: reason_type
+        schema:
+          type: string
+          enum:
+          - mission_complete
+          - knowledge_complete
+          - assessment_complete
+          - claim_revoke
+          - reward_redeem
+          - admin_adjust
+          - reversal
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PointsTransaction'
+  /v1/leaderboard:
+    get:
+      tags:
+      - Leaderboard
+      operationId: API-LRN-LEADERBOARD-GET
+      summary: Get leaderboard for timeframe + scope
+      parameters:
+      - in: query
+        name: timeframe
+        required: true
+        schema:
+          type: string
+          enum:
+          - weekly
+          - monthly
+          - all_time
+      - in: query
+        name: scope
+        required: true
+        schema:
+          type: string
+          enum:
+          - tenant
+          - cohort
+          - team
+      - in: query
+        name: cohort_id
+        schema:
+          $ref: '#/components/schemas/UUID'
+      - in: query
+        name: team_id
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaderboardResponse'
+  /v1/leaderboard/opt_out:
+    post:
+      tags:
+      - Leaderboard
+      operationId: API-LRN-LB-OPTOUT
+      summary: Opt out of leaderboard (if tenant allows)
+      responses:
+        '200':
+          description: Opted out
+  /v1/leaderboard/opt_in:
+    post:
+      tags:
+      - Leaderboard
+      operationId: API-LRN-LB-OPTIN
+      summary: Opt in to leaderboard
+      responses:
+        '200':
+          description: Opted in
+  /v1/rewards:
+    get:
+      tags:
+      - Rewards
+      operationId: API-LRN-REWARDS-LIST
+      summary: List rewards (if enabled)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RewardItem'
+        '403':
+          description: Rewards disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/rewards/{reward_id}:
+    get:
+      tags:
+      - Rewards
+      operationId: API-LRN-REWARDS-DETAIL
+      summary: Reward detail
+      parameters:
+      - in: path
+        name: reward_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RewardItem'
+  /v1/rewards/{reward_id}/redeem:
+    post:
+      tags:
+      - Rewards
+      operationId: API-LRN-REWARDS-REDEEM
+      summary: Redeem reward for points
+      parameters:
+      - in: path
+        name: reward_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Redemption created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - redemption
+                - points_tx
+                properties:
+                  redemption:
+                    $ref: '#/components/schemas/RewardRedemption'
+                  points_tx:
+                    $ref: '#/components/schemas/PointsTransaction'
+        '409':
+          description: Insufficient points / out of stock
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/rewards/redemptions:
+    get:
+      tags:
+      - Rewards
+      operationId: API-LRN-REWARDS-REDEMPTIONS
+      summary: My redemptions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RewardRedemption'
+  /v1/manager/team:
+    get:
+      tags:
+      - Manager
+      operationId: API-MGR-TEAM-LIST
+      summary: List team members (manager)
+      responses:
+        '200':
+          description: OK
+  /v1/manager/team/{user_id}:
+    get:
+      tags:
+      - Manager
+      operationId: API-MGR-TEAM-MEMBER-DETAIL
+      summary: Team member detail (manager)
+      parameters:
+      - in: path
+        name: user_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+  /v1/manager/nudges:
+    post:
+      tags:
+      - Manager
+      operationId: API-MGR-NUDGE-CREATE
+      summary: Send nudge to team member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - user_id
+              - message
+              properties:
+                user_id:
+                  $ref: '#/components/schemas/UUID'
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Sent
+  /v1/admin/task_claims:
+    get:
+      tags:
+      - Admin
+      operationId: API-ADM-CLAIMS-LIST
+      summary: List task claims (review)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TaskClaim'
+  /v1/admin/task_claims/{claim_id}:
+    get:
+      tags:
+      - Admin
+      operationId: API-ADM-CLAIMS-DETAIL
+      summary: Task claim detail
+      parameters:
+      - in: path
+        name: claim_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskClaim'
+  /v1/admin/task_claims/{claim_id}/keep:
+    post:
+      tags:
+      - Admin
+      operationId: API-ADM-CLAIM-KEEP
+      summary: Keep claim (mark reviewed)
+      parameters:
+      - in: path
+        name: claim_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Kept
+  /v1/admin/task_claims/{claim_id}/revoke:
+    post:
+      tags:
+      - Admin
+      operationId: API-ADM-CLAIM-REVOKE
+      summary: Revoke claim (undo points)
+      parameters:
+      - in: path
+        name: claim_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - reason
+              properties:
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Revoked
+  /v1/admin/leaderboard/policy:
+    patch:
+      tags:
+      - Admin
+      operationId: API-ADM-LB-POLICY-PATCH
+      summary: Update leaderboard policy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaderboardPolicy'
+      responses:
+        '200':
+          description: Updated
+  /v1/admin/points/adjust:
+    post:
+      tags:
+      - Admin
+      operationId: API-ADM-POINTS-ADJUST
+      summary: Manual points adjustment (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - user_id
+              - points_delta
+              - reason
+              properties:
+                user_id:
+                  $ref: '#/components/schemas/UUID'
+                points_delta:
+                  type: integer
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Adjusted
+  /v1/continue:
+    get:
+      tags:
+      - Learner
+      operationId: API-LRN-CONTINUE-GET
+      summary: Get the next mission to continue
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContinueResponse'
+  /v1/user_missions/{user_mission_id}/steps/{step_id}/start:
+    post:
+      tags:
+      - Learner
+      operationId: API-LRN-STEP-START
+      summary: Start a mission step (marks in progress)
+      parameters:
+      - in: path
+        name: user_mission_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      - in: path
+        name: step_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissionStep'
+  /v1/issues:
+    post:
+      tags:
+      - Learner
+      operationId: API-LRN-ISSUE-REPORT
+      summary: Report an issue with a mission
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueReportRequest'
+      responses:
+        '200':
+          description: Reported
+  /v1/knowledge_assets/{asset_id}/download:
+    get:
+      tags:
+      - Knowledge
+      operationId: API-LRN-ASSET-DOWNLOAD
+      summary: Get a signed download URL (if allowed)
+      parameters:
+      - in: path
+        name: asset_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignedUrlResponse'
+        '403':
+          description: Download not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/rewards/redemptions/{redemption_id}:
+    get:
+      tags:
+      - Rewards
+      operationId: API-LRN-REWARDS-REDEMPTION-DETAIL
+      summary: Redemption detail / receipt view
+      parameters:
+      - in: path
+        name: redemption_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RewardRedemption'
+  /v1/self_awareness/assessments:
+    get:
+      tags:
+      - SelfAwareness
+      operationId: API-LRN-SA-LIST-ASSESSMENTS
+      summary: List available Self Awareness assessments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SelfAwarenessAssessment'
+  /v1/self_awareness/assessments/{assessment_id}/start:
+    post:
+      tags:
+      - SelfAwareness
+      operationId: API-LRN-SA-START
+      summary: Start a new Self Awareness attempt (enforces retry policy)
+      parameters:
+      - in: path
+        name: assessment_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SelfAwarenessStartResponse'
+        '409':
+          description: Retry too soon
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/self_awareness/instances:
+    get:
+      tags:
+      - SelfAwareness
+      operationId: API-LRN-SA-LIST-INSTANCES
+      summary: List my Self Awareness attempts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SelfAwarenessInstance'
+  /v1/self_awareness/instances/{instance_id}:
+    get:
+      tags:
+      - SelfAwareness
+      operationId: API-LRN-SA-INSTANCE-GET
+      summary: Get attempt detail (results for completed)
+      parameters:
+      - in: path
+        name: instance_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SelfAwarenessInstance'
+  /v1/self_awareness/instances/{instance_id}/answer:
+    post:
+      tags:
+      - SelfAwareness
+      operationId: API-LRN-SA-ANSWER
+      summary: Save an answer for an attempt
+      parameters:
+      - in: path
+        name: instance_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SelfAwarenessAnswerRequest'
+      responses:
+        '200':
+          description: Saved
+  /v1/self_awareness/instances/{instance_id}/submit:
+    post:
+      tags:
+      - SelfAwareness
+      operationId: API-LRN-SA-SUBMIT
+      summary: Submit an attempt (scores and finalizes)
+      parameters:
+      - in: path
+        name: instance_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SelfAwarenessInstance'
+  /v1/self_awareness/holistic:
+    get:
+      tags:
+      - SelfAwareness
+      operationId: API-LRN-SA-HOLISTIC
+      summary: Get holistic profile summary (based on completed attempts)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SelfAwarenessHolisticResponse'
+  /v1/self_awareness/settings:
+    patch:
+      tags:
+      - SelfAwareness
+      operationId: API-LRN-SA-SETTINGS-PATCH
+      summary: Update Self Awareness consent preferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SelfAwarenessSettingsPatch'
+      responses:
+        '200':
+          description: Updated
