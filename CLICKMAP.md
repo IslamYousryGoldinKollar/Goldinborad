@@ -21,6 +21,35 @@ Conventions:
 | ELM-GLOBAL-TOPBAR-LANG | language control | ACT-GLOBAL-OPEN-LANG | Open SCR-LRN-022 |
 | ELM-GLOBAL-NAWRAS-FAB | floating action button | ACT-GLOBAL-OPEN-NAWRAS | Open SCR-LRN-030 (FF.LRN.NAWRAS) |
 
+### Learner shell navigation (CMP-BOTTOMNAV / CMP-SIDENAV)
+
+| Element ID | Action ID | Behavior |
+|---|---|---|
+| ELM-LRN-NAV-HOME | ACT-LRN-NAV-HOME | Route → SCR-LRN-001 (/app/home) |
+| ELM-LRN-NAV-JOURNEY | ACT-LRN-NAV-JOURNEY | Route → SCR-LRN-002 (/app/journey) |
+| ELM-LRN-NAV-PLAYGROUND | ACT-LRN-NAV-PLAYGROUND | Route → SCR-LRN-015 (/app/playground) |
+| ELM-LRN-NAV-CAREER | ACT-LRN-NAV-CAREER | Route → SCR-LRN-018 (/app/career) |
+| ELM-LRN-NAV-PROFILE | ACT-LRN-NAV-PROFILE | Route → SCR-LRN-020 (/app/profile) |
+
+### Admin shell navigation (CMP-ADM-SHELL)
+
+| Element ID | Action ID | Behavior |
+|---|---|---|
+| ELM-ADM-NAV-DASHBOARD | ACT-ADM-NAV-DASHBOARD | Route → SCR-ADM-001 (/admin/dashboard) |
+| ELM-ADM-NAV-USERS | ACT-ADM-NAV-USERS | Route → SCR-ADM-002 (/admin/users) |
+| ELM-ADM-NAV-COHORTS | ACT-ADM-NAV-COHORTS | Route → SCR-ADM-003 (/admin/cohorts) |
+| ELM-ADM-NAV-JOURNEYS | ACT-ADM-NAV-JOURNEYS | Route → SCR-ADM-004 (/admin/journeys) |
+| ELM-ADM-NAV-APPROVALS | ACT-ADM-NAV-APPROVALS | Route → SCR-ADM-007 (/admin/approvals) |
+| ELM-ADM-NAV-KNOWLEDGE | ACT-ADM-NAV-KNOWLEDGE | Route → SCR-ADM-008 (/admin/knowledge) |
+| ELM-ADM-NAV-SCHEDULING | ACT-ADM-NAV-SCHEDULING | Route → SCR-ADM-010 (/admin/scheduling) |
+| ELM-ADM-NAV-GAMIFICATION | ACT-ADM-NAV-GAMIFICATION | Route → SCR-ADM-011 (/admin/gamification) |
+| ELM-ADM-NAV-REWARDS | ACT-ADM-NAV-REWARDS | Route → SCR-ADM-012 (/admin/rewards) |
+| ELM-ADM-NAV-AI-INPUT | ACT-ADM-NAV-AI-INPUT | Route → SCR-ADM-014 (/admin/ai-builder/input) |
+| ELM-ADM-NAV-CLAIMS | ACT-ADM-NAV-CLAIMS | Route → SCR-ADM-017 (/admin/reviews/task-claims) |
+| ELM-ADM-NAV-SETTINGS-LANG | ACT-ADM-NAV-SETTINGS-LANG | Route → SCR-ADM-019 (/admin/settings/language) |
+| ELM-ADM-NAV-SETTINGS-SECURITY | ACT-ADM-NAV-SETTINGS-SECURITY | Route → SCR-ADM-020 (/admin/settings/security) |
+| ELM-ADM-NAV-AUDIT | ACT-ADM-NAV-AUDIT | Route → SCR-ADM-021 (/admin/audit) |
+
 ---
 
 ## 5.1 SCR-PUB-001 — Login (/login)
