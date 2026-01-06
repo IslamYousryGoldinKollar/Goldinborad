@@ -241,3 +241,15 @@ Common global elements:
   - SA retry days
   - video threshold completion
 
+---
+
+## 10) Missions, scheduling, and claim handling
+
+- Model missions using `mission_templates` + `mission_steps` (digital vs physical), schedule them into `journey_days` and `journey_day_missions`, and instantiate per-user records in `user_missions`/`user_mission_steps`.
+- Ordering in Today Plan honors policies: overdue compliance missions first, then today’s scheduled tasks ordered by priority bucket (`priority_bucket` in API), then future tasks; backend should stamp that bucket when hydrating `TodayPlan.tasks`.
+- Rescheduling enforces tenant policy from `tenant_settings` (defaults in POLICIES.md: ±3 days, max 2 moves, optional earlier move). Each approved change writes `user_mission_schedule_overrides` and increments `user_missions.reschedule_count`; out-of-policy attempts raise `ERR.MISSION.RESCHEDULE_OUT_OF_POLICY`.
+- Trust-first attestations (`completion_mode = user_attestation_trusted`) immediately mark `user_missions.status = completed`, set `completion_source = user_attestation`, insert a positive `points_transactions` row (reason `mission_complete`), and create a `task_claims` row with `status = unreviewed`.
+- Admin review flows:
+  - **Keep** → update `task_claims.status = kept`, stamp reviewer, no ledger mutation.
+  - **Revoke** → set `task_claims.status = revoked`, record `revoke_reason`, and write a compensating `points_transactions` row with `reason_type = claim_revoke`, negative `delta`, `status = active`, and `reversal_of_tx_id` pointing at the original mission award.
+

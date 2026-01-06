@@ -113,6 +113,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserMissionSummary'
+        priority_policy:
+          type: object
+          description: Prioritization buckets applied to tasks for the day.
+          properties:
+            buckets:
+              type: array
+              items:
+                type: string
+                enum:
+                - overdue_compliance
+                - today_high
+                - today_normal
+                - future
     UserMissionSummary:
       type: object
       required:
@@ -153,6 +166,14 @@ components:
           - completed
           - overdue
           - revoked
+        priority_bucket:
+          type: string
+          description: Scheduling bucket used for ordering per policy (overdue compliance, today, future).
+          enum:
+          - overdue_compliance
+          - today_high
+          - today_normal
+          - future
     UserMissionDetail:
       type: object
       required:
@@ -212,6 +233,22 @@ components:
               type: array
               items:
                 type: string
+        reschedule_state:
+          type: object
+          description: Policy awareness for learner rescheduling.
+          properties:
+            reschedule_count:
+              type: integer
+            max_reschedules_per_mission:
+              type: integer
+            reschedule_window_days:
+              type: integer
+            allow_reschedule_earlier:
+              type: boolean
+            last_override:
+              allOf:
+              - $ref: '#/components/schemas/UserMissionScheduleOverride'
+              nullable: true
     MissionStep:
       type: object
       required:
@@ -491,6 +528,42 @@ components:
         revoke_reason:
           type: string
           nullable: true
+        created_at:
+          type: string
+          format: date-time
+    UserMissionScheduleOverride:
+      type: object
+      required:
+      - override_id
+      - user_mission_id
+      - previous_due_date
+      - new_due_date
+      - status
+      - created_at
+      properties:
+        override_id:
+          $ref: '#/components/schemas/UUID'
+        user_mission_id:
+          $ref: '#/components/schemas/UUID'
+        previous_due_date:
+          type: string
+          format: date
+          nullable: true
+        new_due_date:
+          type: string
+          format: date
+        requested_by_user_id:
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          nullable: true
+        reason:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+          - applied
+          - rejected
         created_at:
           type: string
           format: date-time
@@ -891,13 +964,21 @@ paths:
                   type: string
       responses:
         '200':
-          description: Rescheduled
+          description: Rescheduled (policy compliant)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserMissionDetail'
+                type: object
+                required:
+                - user_mission
+                - override
+                properties:
+                  user_mission:
+                    $ref: '#/components/schemas/UserMissionDetail'
+                  override:
+                    $ref: '#/components/schemas/UserMissionScheduleOverride'
         '409':
-          description: Out of policy / already completed
+          description: Out of policy (ERR.MISSION.RESCHEDULE_OUT_OF_POLICY) or already completed
           content:
             application/json:
               schema:
@@ -933,7 +1014,7 @@ paths:
                     $ref: '#/components/schemas/UUID'
       responses:
         '200':
-          description: Completed + points awarded + claim created
+          description: Trust-first: mission completed, points awarded immediately, claim created
           content:
             application/json:
               schema:
@@ -1361,7 +1442,11 @@ paths:
           $ref: '#/components/schemas/UUID'
       responses:
         '200':
-          description: Kept
+          description: Claim marked kept (no ledger change)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskClaim'
   /v1/admin/task_claims/{claim_id}/revoke:
     post:
       tags:
@@ -1387,7 +1472,21 @@ paths:
                   type: string
       responses:
         '200':
-          description: Revoked
+          description: Revoked with compensating points transaction
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - claim
+                - reversal_tx
+                properties:
+                  claim:
+                    $ref: '#/components/schemas/TaskClaim'
+                  reversal_tx:
+                    allOf:
+                    - $ref: '#/components/schemas/PointsTransaction'
+                    description: Negative delta transaction referencing the original mission award.
   /v1/admin/leaderboard/policy:
     patch:
       tags:
