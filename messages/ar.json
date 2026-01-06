@@ -150,7 +150,17 @@
     "sa_holistic": {
       "title": "الملف الشامل",
       "based_on": "استنادًا إلى: {{TPL.sa.version_label}} ({{TPL.sa.completed_at}})",
-      "switch_version": "تبديل الإصدار"
+      "switch_version": "تبديل الإصدار",
+      "refresh": "إعادة إنشاء الملخص",
+      "refreshing": "جارٍ إنشاء أحدث ملخص لك…"
+    },
+    "concierge": {
+      "title": "اسأل نوراس",
+      "prompt_placeholder": "اسأل عن الانضمام أو السياسات أو مهامك…",
+      "attach": "إرفاق مرجع",
+      "send": "إرسال",
+      "history_empty": "لا توجد رسائل بعد. اطرح أي سؤال للبدء.",
+      "localized_hint": "الردود تتبع تفضيل لغتك."
     },
     "playground": {
       "title": "ساحة اللعب",
@@ -267,7 +277,19 @@
       "title": "قوالب المهام"
     },
     "knowledge": {
-      "title": "قاعدة المعرفة"
+      "title": "قاعدة المعرفة",
+      "governance": {
+        "status": {
+          "draft": "مسودة",
+          "in_review": "قيد المراجعة",
+          "published": "منشور",
+          "archived": "مؤرشف"
+        },
+        "audit": "سجل التدقيق",
+        "download_source": "تنزيل الملف الأصلي",
+        "transcode_status": "حالة التحويل",
+        "transcript_status": "حالة التفريغ النصي"
+      }
     },
     "asset_editor": {
       "title": "محرر المحتوى"
@@ -310,6 +332,14 @@
       },
       "blueprint": {
         "title": "منشئ الذكاء الاصطناعي — المخطط"
+      },
+      "status": {
+        "created": "بانتظار المدخلات",
+        "stt_running": "جارٍ معالجة الملاحظة الصوتية…",
+        "ready_for_inventory": "جاهز لمراجعة الجرد",
+        "inventory_ready": "تم اعتماد الجرد",
+        "blueprint_ready": "المخطط جاهز",
+        "failed": "فشل في التنفيذ — أعد المحاولة"
       }
     }
   }
