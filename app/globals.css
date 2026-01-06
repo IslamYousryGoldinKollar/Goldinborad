@@ -1,0 +1,234 @@
+:root {
+  --tok-color-primary-50: 245 248 255;
+  --tok-color-primary-100: 225 236 255;
+  --tok-color-primary-200: 195 215 255;
+  --tok-color-primary-300: 155 186 250;
+  --tok-color-primary-400: 115 156 246;
+  --tok-color-primary-500: 76 128 240;
+  --tok-color-primary-600: 50 102 214;
+  --tok-color-primary-700: 36 80 172;
+  --tok-color-primary-800: 25 58 130;
+  --tok-color-primary-900: 17 40 96;
+
+  --tok-color-neutral-0: 255 255 255;
+  --tok-color-neutral-50: 248 249 251;
+  --tok-color-neutral-100: 234 236 240;
+  --tok-color-neutral-200: 214 219 228;
+  --tok-color-neutral-300: 186 194 207;
+  --tok-color-neutral-500: 120 129 147;
+  --tok-color-neutral-700: 71 82 103;
+  --tok-color-neutral-900: 27 33 45;
+
+  --tok-color-success-50: 236 252 243;
+  --tok-color-success-100: 209 250 229;
+  --tok-color-success-200: 167 243 208;
+  --tok-color-success-300: 110 231 183;
+  --tok-color-success-400: 52 211 153;
+  --tok-color-success-500: 16 185 129;
+  --tok-color-success-600: 5 150 105;
+  --tok-color-success-700: 4 120 87;
+  --tok-color-success-800: 6 95 70;
+  --tok-color-success-900: 6 78 59;
+
+  --tok-color-warning-50: 255 251 235;
+  --tok-color-warning-100: 254 243 199;
+  --tok-color-warning-200: 253 230 138;
+  --tok-color-warning-300: 252 211 77;
+  --tok-color-warning-400: 251 191 36;
+  --tok-color-warning-500: 245 158 11;
+  --tok-color-warning-600: 217 119 6;
+  --tok-color-warning-700: 180 83 9;
+  --tok-color-warning-800: 146 64 14;
+  --tok-color-warning-900: 120 53 15;
+
+  --tok-color-danger-50: 254 242 242;
+  --tok-color-danger-100: 254 226 226;
+  --tok-color-danger-200: 254 202 202;
+  --tok-color-danger-300: 252 165 165;
+  --tok-color-danger-400: 248 113 113;
+  --tok-color-danger-500: 239 68 68;
+  --tok-color-danger-600: 220 38 38;
+  --tok-color-danger-700: 185 28 28;
+  --tok-color-danger-800: 153 27 27;
+  --tok-color-danger-900: 127 29 29;
+
+  --tok-color-info-50: 239 246 255;
+  --tok-color-info-100: 219 234 254;
+  --tok-color-info-200: 191 219 254;
+  --tok-color-info-300: 147 197 253;
+  --tok-color-info-400: 96 165 250;
+  --tok-color-info-500: 59 130 246;
+  --tok-color-info-600: 37 99 235;
+  --tok-color-info-700: 29 78 216;
+  --tok-color-info-800: 30 64 175;
+  --tok-color-info-900: 30 58 138;
+
+  --tok-font-size-100: 12px;
+  --tok-font-size-200: 14px;
+  --tok-font-size-300: 16px;
+  --tok-font-size-400: 18px;
+  --tok-font-size-500: 22px;
+
+  --tok-font-weight-regular: 400;
+  --tok-font-weight-medium: 500;
+  --tok-font-weight-semibold: 600;
+
+  --tok-space-0: 0px;
+  --tok-space-1: 4px;
+  --tok-space-2: 8px;
+  --tok-space-3: 12px;
+  --tok-space-4: 16px;
+  --tok-space-5: 20px;
+  --tok-space-6: 24px;
+  --tok-space-8: 32px;
+
+  --tok-radius-sm: 6px;
+  --tok-radius-md: 10px;
+  --tok-radius-lg: 14px;
+
+  --tok-motion-duration-fast: 120ms;
+  --tok-motion-duration-base: 200ms;
+  --tok-motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  --tok-font-family-latin: "Inter", system-ui, -apple-system, sans-serif;
+  --tok-font-family-arabic: "Cairo", "Noto Kufi Arabic", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: rgb(var(--tok-color-neutral-50));
+  color: rgb(var(--tok-color-neutral-900));
+  font-family: var(--tok-font-family-latin);
+}
+
+body.font-arabic {
+  font-family: var(--tok-font-family-arabic);
+}
+
+.font-latin {
+  font-family: var(--tok-font-family-latin);
+}
+
+.font-arabic {
+  font-family: var(--tok-font-family-arabic);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+.layout-surface {
+  background: rgb(var(--tok-color-neutral-0));
+  border: 1px solid rgb(var(--tok-color-neutral-200));
+  border-radius: var(--tok-radius-lg);
+  padding: var(--tok-space-4);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+}
+
+.topbar, .bottomnav, .admin-sidenav {
+  background: rgb(var(--tok-color-neutral-0));
+  border-color: rgb(var(--tok-color-neutral-200));
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--tok-space-3) var(--tok-space-4);
+  border-bottom: 1px solid rgb(var(--tok-color-neutral-200));
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.bottomnav {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 1px solid rgb(var(--tok-color-neutral-200));
+  position: sticky;
+  bottom: 0;
+  padding: var(--tok-space-2);
+}
+
+.nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tok-space-1);
+  padding: var(--tok-space-2);
+  border-radius: var(--tok-radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--tok-motion-duration-fast) var(--tok-motion-ease-standard);
+}
+
+.nav-button[aria-current="page"] {
+  background: rgba(var(--tok-color-primary-100), 0.7);
+  color: rgb(var(--tok-color-primary-700));
+  font-weight: var(--tok-font-weight-semibold);
+}
+
+.nav-button:focus-visible,
+.icon-button:focus-visible {
+  outline: 3px solid rgba(var(--tok-color-primary-300), 0.9);
+  outline-offset: 2px;
+}
+
+.icon-button {
+  border: 1px solid rgb(var(--tok-color-neutral-200));
+  background: rgb(var(--tok-color-neutral-0));
+  border-radius: var(--tok-radius-md);
+  padding: var(--tok-space-2) var(--tok-space-3);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tok-space-2);
+}
+
+.layout-grid {
+  display: grid;
+  gap: var(--tok-space-4);
+  padding: var(--tok-space-4);
+}
+
+.admin-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+
+.admin-sidenav {
+  border-right: 1px solid rgb(var(--tok-color-neutral-200));
+  padding: var(--tok-space-4);
+}
+
+.admin-content {
+  padding: var(--tok-space-5);
+}
+
+.section-heading {
+  font-size: var(--tok-font-size-400);
+  font-weight: var(--tok-font-weight-semibold);
+  margin: 0 0 var(--tok-space-3) 0;
+}
+
+.helper-text {
+  color: rgb(var(--tok-color-neutral-700));
+  font-size: var(--tok-font-size-200);
+}
+
+.card-grid {
+  display: grid;
+  gap: var(--tok-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
