@@ -1,0 +1,12 @@
+{
+  "name": "goldinkollar-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/web", "apps/api"],
+  "scripts": {
+    "lint": "echo 'lint not yet configured'",
+    "test": "echo 'tests not yet implemented'",
+    "dev:web": "next dev --turbo --port 3000 --hostname 0.0.0.0 -w apps/web",
+    "dev:api": "nest start --watch"
+  }
+}
