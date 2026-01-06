@@ -49,6 +49,7 @@ Core concepts:
   - STT jobs
   - notification jobs
   - AI builder generation
+  - upload finalization hooks (persist → enqueue STT/transcode)
 
 ### Storage / indexing (logical)
 - Object storage (uploads: video/pdf/audio/images)
@@ -76,6 +77,12 @@ Recommended:
 - Short-lived access token (JWT)
 - Refresh token via httpOnly cookie
 - `GET /v1/me` returns identity + roles + flags
+
+### 3.4 Uploads, media, and voice handling
+- Admin videos are uploaded by humans (no auto-generated video) and persisted to object storage before publishing.
+- Upload finalization must schedule transcoding + STT workers when `purpose` is a video or voice note.
+- Browser voice recording for AI Builder/concierge is saved via `/v1/uploads` → `/v1/uploads/{upload_id}/finalize` so transcripts and governance metadata are attached to tenants.
+- Knowledge Base governance is enforced by RBAC (PERM.ADM.CONTENT.MANAGE) and every publish/unpublish/change emits an audit log entry.
 
 ---
 
