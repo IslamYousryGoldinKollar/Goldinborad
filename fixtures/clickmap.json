@@ -1,0 +1,32 @@
+[
+  {
+    "screen": "SCR-PUB-001",
+    "elementId": "ELM-PUB-001-SUBMIT",
+    "actionId": "ACT-PUB-001-LOGIN",
+    "api": "API-AUTH-LOGIN"
+  },
+  {
+    "screen": "SCR-LRN-014",
+    "elementId": "ELM-LRN-014-TASK-OPEN__<um_id>",
+    "actionId": "ACT-LRN-014-OPEN-TASK",
+    "route": "/app/missions/<um_id>"
+  },
+  {
+    "screen": "SCR-LRN-003",
+    "elementId": "ELM-LRN-003-MARK-COMPLETE",
+    "actionId": "ACT-LRN-003-COMPLETE",
+    "api": "API-LRN-UM-COMPLETE"
+  },
+  {
+    "screen": "SCR-LRN-025",
+    "elementId": "ELM-LRN-025-SUBMIT",
+    "actionId": "ACT-LRN-025-SUBMIT",
+    "api": "API-LRN-UM-ATTEST"
+  },
+  {
+    "screen": "SCR-LRN-027",
+    "elementId": "ELM-LRN-027-APPLY",
+    "actionId": "ACT-LRN-027-APPLY",
+    "api": "API-LRN-UM-RESCHEDULE"
+  }
+]

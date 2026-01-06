@@ -23,6 +23,8 @@ tags:
 - name: Manager
 - name: Admin
 - name: Uploads
+- name: AIConcierge
+- name: AIBuilder
 components:
   securitySchemes:
     bearerAuth:
@@ -113,6 +115,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserMissionSummary'
+        priority_policy:
+          type: object
+          description: Prioritization buckets applied to tasks for the day.
+          properties:
+            buckets:
+              type: array
+              items:
+                type: string
+                enum:
+                - overdue_compliance
+                - today_high
+                - today_normal
+                - future
     UserMissionSummary:
       type: object
       required:
@@ -153,6 +168,14 @@ components:
           - completed
           - overdue
           - revoked
+        priority_bucket:
+          type: string
+          description: Scheduling bucket used for ordering per policy (overdue compliance, today, future).
+          enum:
+          - overdue_compliance
+          - today_high
+          - today_normal
+          - future
     UserMissionDetail:
       type: object
       required:
@@ -212,6 +235,22 @@ components:
               type: array
               items:
                 type: string
+        reschedule_state:
+          type: object
+          description: Policy awareness for learner rescheduling.
+          properties:
+            reschedule_count:
+              type: integer
+            max_reschedules_per_mission:
+              type: integer
+            reschedule_window_days:
+              type: integer
+            allow_reschedule_earlier:
+              type: boolean
+            last_override:
+              allOf:
+              - $ref: '#/components/schemas/UserMissionScheduleOverride'
+              nullable: true
     MissionStep:
       type: object
       required:
@@ -285,6 +324,80 @@ components:
           nullable: true
         download_allowed:
           type: boolean
+        governance_status:
+          type: string
+          description: Draft/review/published state for admin governance
+          enum:
+          - draft
+          - in_review
+          - published
+          - archived
+          nullable: true
+        uploaded_by:
+          $ref: '#/components/schemas/UUID'
+        source_upload_id:
+          $ref: '#/components/schemas/UUID'
+          nullable: true
+        poster_upload_id:
+          $ref: '#/components/schemas/UUID'
+          nullable: true
+        transcode_status:
+          type: string
+          enum:
+          - pending
+          - processing
+          - ready
+          - failed
+          nullable: true
+        transcript_status:
+          type: string
+          enum:
+          - not_requested
+          - queued
+          - processing
+          - complete
+          - failed
+          nullable: true
+        audit_trail:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLogEntry'
+          nullable: true
+    KnowledgeAssetAdminRequest:
+      type: object
+      required:
+      - title
+      - asset_type
+      - language
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        asset_type:
+          type: string
+          enum:
+          - video
+          - article
+          - pdf
+          - flashcards
+        language:
+          type: string
+          enum:
+          - en
+          - ar
+        download_allowed:
+          type: boolean
+        source_upload_id:
+          $ref: '#/components/schemas/UUID'
+        poster_upload_id:
+          $ref: '#/components/schemas/UUID'
+          nullable: true
+        publish:
+          type: boolean
+          description: If true, publishes immediately after validation
+          nullable: true
     UploadCreateRequest:
       type: object
       required:
@@ -313,6 +426,64 @@ components:
           type: object
           additionalProperties:
             type: string
+    UploadFinalizeRequest:
+      type: object
+      required:
+      - upload_id
+      - purpose
+      properties:
+        upload_id:
+          $ref: '#/components/schemas/UUID'
+        purpose:
+          type: string
+          description: Context for processing the upload
+          enum:
+          - knowledge_video
+          - knowledge_document
+          - ai_voice_note
+          - evidence
+        language:
+          type: string
+          enum:
+          - en
+          - ar
+          nullable: true
+        duration_seconds:
+          type: integer
+          nullable: true
+        checksum_md5:
+          type: string
+          nullable: true
+        entity_type:
+          type: string
+          description: Optional entity linkage for audit/logging
+          nullable: true
+        entity_id:
+          $ref: '#/components/schemas/UUID'
+        retry_transcode:
+          type: boolean
+          description: Force a re-queue of transcoding if applicable
+          nullable: true
+    UploadFinalizeResponse:
+      type: object
+      required:
+      - upload_id
+      - storage_key
+      properties:
+        upload_id:
+          $ref: '#/components/schemas/UUID'
+        storage_key:
+          type: string
+        transcode_job_id:
+          $ref: '#/components/schemas/UUID'
+          nullable: true
+        stt_job_id:
+          $ref: '#/components/schemas/UUID'
+          nullable: true
+        download_url:
+          allOf:
+          - $ref: '#/components/schemas/SignedUrlResponse'
+          nullable: true
     PointsTransaction:
       type: object
       required:
@@ -352,6 +523,33 @@ components:
           allOf:
           - $ref: '#/components/schemas/UUID'
           nullable: true
+    AuditLogEntry:
+      type: object
+      required:
+      - audit_id
+      - actor_id
+      - action
+      - created_at
+      properties:
+        audit_id:
+          $ref: '#/components/schemas/UUID'
+        actor_id:
+          $ref: '#/components/schemas/UUID'
+        action:
+          type: string
+        target_type:
+          type: string
+          nullable: true
+        target_id:
+          $ref: '#/components/schemas/UUID'
+          nullable: true
+        metadata:
+          type: object
+          additionalProperties: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
     LeaderboardEntry:
       type: object
       required:
@@ -491,6 +689,42 @@ components:
         revoke_reason:
           type: string
           nullable: true
+        created_at:
+          type: string
+          format: date-time
+    UserMissionScheduleOverride:
+      type: object
+      required:
+      - override_id
+      - user_mission_id
+      - previous_due_date
+      - new_due_date
+      - status
+      - created_at
+      properties:
+        override_id:
+          $ref: '#/components/schemas/UUID'
+        user_mission_id:
+          $ref: '#/components/schemas/UUID'
+        previous_due_date:
+          type: string
+          format: date
+          nullable: true
+        new_due_date:
+          type: string
+          format: date
+        requested_by_user_id:
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          nullable: true
+        reason:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+          - applied
+          - rejected
         created_at:
           type: string
           format: date-time
@@ -666,6 +900,138 @@ components:
           type: boolean
         consent_share_manager:
           type: boolean
+    SelfAwarenessSummaryJob:
+      type: object
+      required:
+      - job_id
+      - status
+      properties:
+        job_id:
+          $ref: '#/components/schemas/UUID'
+        status:
+          type: string
+          enum:
+          - queued
+          - processing
+          - complete
+          - failed
+        language:
+          type: string
+          enum:
+          - en
+          - ar
+          nullable: true
+        holistic:
+          $ref: '#/components/schemas/SelfAwarenessHolisticResponse'
+          nullable: true
+    ConciergeMessage:
+      type: object
+      required:
+      - role
+      - content
+      properties:
+        role:
+          type: string
+          enum:
+          - user
+          - assistant
+          - system
+        content:
+          type: string
+        locale:
+          type: string
+          enum:
+          - en
+          - ar
+          nullable: true
+    ConciergeTurnResponse:
+      type: object
+      required:
+      - messages
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConciergeMessage'
+        suggested_actions:
+          type: array
+          items:
+            type: string
+          nullable: true
+    AiBuilderJob:
+      type: object
+      required:
+      - job_id
+      - status
+      - created_at
+      properties:
+        job_id:
+          $ref: '#/components/schemas/UUID'
+        status:
+          type: string
+          enum:
+          - created
+          - stt_running
+          - ready_for_inventory
+          - inventory_ready
+          - blueprint_ready
+          - failed
+        input_upload_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/UUID'
+          nullable: true
+        voice_upload_id:
+          $ref: '#/components/schemas/UUID'
+          nullable: true
+        stt_language:
+          type: string
+          enum:
+          - en
+          - ar
+          nullable: true
+        transcript_text:
+          type: string
+          nullable: true
+        inventory_json:
+          type: object
+          additionalProperties: true
+          nullable: true
+        blueprint_json:
+          type: object
+          additionalProperties: true
+          nullable: true
+        created_by:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    AiBuilderInputRequest:
+      type: object
+      required:
+      - prompt
+      properties:
+        prompt:
+          type: string
+        input_upload_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/UUID'
+        voice_upload_id:
+          $ref: '#/components/schemas/UUID'
+          nullable: true
+        target_language:
+          type: string
+          enum:
+          - en
+          - ar
+          nullable: true
+        journey_id:
+          $ref: '#/components/schemas/UUID'
+          nullable: true
 paths:
   /v1/auth/login:
     post:
@@ -798,6 +1164,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UploadCreateResponse'
+  /v1/uploads/{upload_id}/finalize:
+    post:
+      tags:
+      - Uploads
+      operationId: API-UPLOADS-FINALIZE
+      summary: Finalize an upload (persist + schedule processing)
+      parameters:
+      - in: path
+        name: upload_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadFinalizeRequest'
+      responses:
+        '200':
+          description: Finalized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadFinalizeResponse'
+  /v1/uploads/{upload_id}/download:
+    get:
+      tags:
+      - Uploads
+      operationId: API-UPLOADS-DOWNLOAD
+      summary: Get a signed download URL for a stored object
+      parameters:
+      - in: path
+        name: upload_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignedUrlResponse'
   /v1/today_plan:
     get:
       tags:
@@ -891,13 +1301,21 @@ paths:
                   type: string
       responses:
         '200':
-          description: Rescheduled
+          description: Rescheduled (policy compliant)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserMissionDetail'
+                type: object
+                required:
+                - user_mission
+                - override
+                properties:
+                  user_mission:
+                    $ref: '#/components/schemas/UserMissionDetail'
+                  override:
+                    $ref: '#/components/schemas/UserMissionScheduleOverride'
         '409':
-          description: Out of policy / already completed
+          description: Out of policy (ERR.MISSION.RESCHEDULE_OUT_OF_POLICY) or already completed
           content:
             application/json:
               schema:
@@ -933,7 +1351,7 @@ paths:
                     $ref: '#/components/schemas/UUID'
       responses:
         '200':
-          description: Completed + points awarded + claim created
+          description: Trust-first: mission completed, points awarded immediately, claim created
           content:
             application/json:
               schema:
@@ -1361,7 +1779,11 @@ paths:
           $ref: '#/components/schemas/UUID'
       responses:
         '200':
-          description: Kept
+          description: Claim marked kept (no ledger change)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskClaim'
   /v1/admin/task_claims/{claim_id}/revoke:
     post:
       tags:
@@ -1387,7 +1809,21 @@ paths:
                   type: string
       responses:
         '200':
-          description: Revoked
+          description: Revoked with compensating points transaction
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - claim
+                - reversal_tx
+                properties:
+                  claim:
+                    $ref: '#/components/schemas/TaskClaim'
+                  reversal_tx:
+                    allOf:
+                    - $ref: '#/components/schemas/PointsTransaction'
+                    description: Negative delta transaction referencing the original mission award.
   /v1/admin/leaderboard/policy:
     patch:
       tags:
@@ -1429,6 +1865,345 @@ paths:
       responses:
         '200':
           description: Adjusted
+  /v1/admin/knowledge_assets:
+    get:
+      tags:
+      - Admin
+      operationId: API-ADM-KB-LIST
+      summary: List knowledge assets with governance metadata
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - draft
+          - in_review
+          - published
+          - archived
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/KnowledgeAsset'
+    post:
+      tags:
+      - Admin
+      operationId: API-ADM-KB-CREATE
+      summary: Create a knowledge asset (requires PERM.ADM.CONTENT.MANAGE)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KnowledgeAssetAdminRequest'
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeAsset'
+  /v1/admin/knowledge_assets/{asset_id}:
+    get:
+      tags:
+      - Admin
+      operationId: API-ADM-KB-DETAIL
+      summary: Get knowledge asset detail (admin view)
+      parameters:
+      - in: path
+        name: asset_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeAsset'
+    patch:
+      tags:
+      - Admin
+      operationId: API-ADM-KB-PATCH
+      summary: Update a knowledge asset (metadata or publish)
+      parameters:
+      - in: path
+        name: asset_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KnowledgeAssetAdminRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeAsset'
+  /v1/admin/knowledge_assets/{asset_id}/publish:
+    post:
+      tags:
+      - Admin
+      operationId: API-ADM-KB-PUBLISH
+      summary: Request publish or send to review
+      parameters:
+      - in: path
+        name: asset_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                  - in_review
+                  - published
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeAsset'
+  /v1/admin/knowledge_assets/{asset_id}/audit:
+    get:
+      tags:
+      - Admin
+      operationId: API-ADM-KB-AUDIT
+      summary: Audit log entries for a knowledge asset
+      parameters:
+      - in: path
+        name: asset_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditLogEntry'
+  /v1/admin/knowledge_assets/{asset_id}/transcode:
+    post:
+      tags:
+      - Admin
+      operationId: API-ADM-KB-TRANSCODE
+      summary: Re-queue transcoding for a video asset
+      parameters:
+      - in: path
+        name: asset_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Enqueued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeAsset'
+  /v1/admin/knowledge_assets/{asset_id}/transcript:
+    post:
+      tags:
+      - Admin
+      operationId: API-ADM-KB-TRANSCRIPT
+      summary: Queue or regenerate transcript for a video asset
+      parameters:
+      - in: path
+        name: asset_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                language:
+                  type: string
+                  enum:
+                  - en
+                  - ar
+      responses:
+        '200':
+          description: Enqueued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeAsset'
+  /v1/admin/knowledge_assets/{asset_id}/download:
+    get:
+      tags:
+      - Admin
+      operationId: API-ADM-KB-DOWNLOAD
+      summary: Get a signed download URL for the source upload
+      parameters:
+      - in: path
+        name: asset_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignedUrlResponse'
+  /v1/admin/ai_builder/jobs:
+    get:
+      tags:
+      - AIBuilder
+      operationId: API-ADM-AI-JOBS-LIST
+      summary: List AI Builder jobs for the tenant
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AiBuilderJob'
+    post:
+      tags:
+      - AIBuilder
+      operationId: API-ADM-AI-JOB-START
+      summary: Start an AI Builder job (supports voice + uploads)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiBuilderInputRequest'
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiBuilderJob'
+  /v1/admin/ai_builder/jobs/{job_id}:
+    get:
+      tags:
+      - AIBuilder
+      operationId: API-ADM-AI-JOB-DETAIL
+      summary: Get job detail + STT/transcode progress
+      parameters:
+      - in: path
+        name: job_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiBuilderJob'
+  /v1/admin/ai_builder/jobs/{job_id}/inventory:
+    post:
+      tags:
+      - AIBuilder
+      operationId: API-ADM-AI-JOB-INVENTORY
+      summary: Approve or edit inventory stage output
+      parameters:
+      - in: path
+        name: job_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                inventory_json:
+                  type: object
+                  additionalProperties: true
+                status:
+                  type: string
+                  enum:
+                  - ready_for_inventory
+                  - inventory_ready
+      responses:
+        '200':
+          description: Saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiBuilderJob'
+  /v1/admin/ai_builder/jobs/{job_id}/blueprint:
+    post:
+      tags:
+      - AIBuilder
+      operationId: API-ADM-AI-JOB-BLUEPRINT
+      summary: Generate blueprint drafts from approved inventory
+      parameters:
+      - in: path
+        name: job_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target_language:
+                  type: string
+                  enum:
+                  - en
+                  - ar
+      responses:
+        '200':
+          description: Enqueued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiBuilderJob'
   /v1/continue:
     get:
       tags:
@@ -1662,6 +2437,106 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SelfAwarenessHolisticResponse'
+  /v1/self_awareness/holistic/refresh:
+    post:
+      tags:
+      - SelfAwareness
+      operationId: API-LRN-SA-HOLISTIC-REFRESH
+      summary: Trigger summarizer regeneration (async)
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                language:
+                  type: string
+                  enum:
+                  - en
+                  - ar
+      responses:
+        '200':
+          description: Job queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SelfAwarenessSummaryJob'
+  /v1/self_awareness/holistic/jobs/{job_id}:
+    get:
+      tags:
+      - SelfAwareness
+      operationId: API-LRN-SA-HOLISTIC-JOB
+      summary: Poll summarizer job status
+      parameters:
+      - in: path
+        name: job_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SelfAwarenessSummaryJob'
+  /v1/ai/concierge/messages:
+    post:
+      tags:
+      - AIConcierge
+      operationId: API-AI-CONCIERGE-MESSAGE
+      summary: Send a message to the concierge (Nawras)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - message
+              properties:
+                message:
+                  type: string
+                locale:
+                  type: string
+                  enum:
+                  - en
+                  - ar
+                attachment_upload_ids:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/UUID'
+                context_asset_id:
+                  $ref: '#/components/schemas/UUID'
+                  nullable: true
+      responses:
+        '200':
+          description: Response turn
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConciergeTurnResponse'
+  /v1/ai/concierge/history:
+    get:
+      tags:
+      - AIConcierge
+      operationId: API-AI-CONCIERGE-HISTORY
+      summary: Retrieve recent concierge conversation turns
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ConciergeMessage'
   /v1/self_awareness/settings:
     patch:
       tags:

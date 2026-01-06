@@ -150,7 +150,17 @@
     "sa_holistic": {
       "title": "Holistic profile",
       "based_on": "Based on: {{TPL.sa.version_label}} ({{TPL.sa.completed_at}})",
-      "switch_version": "Switch version"
+      "switch_version": "Switch version",
+      "refresh": "Regenerate summary",
+      "refreshing": "Generating your latest summary…"
+    },
+    "concierge": {
+      "title": "Ask Nawras",
+      "prompt_placeholder": "Ask about onboarding, policies, or your missions…",
+      "attach": "Attach reference",
+      "send": "Send",
+      "history_empty": "No messages yet. Ask anything to get started.",
+      "localized_hint": "Responses follow your language preference."
     },
     "playground": {
       "title": "Playground",
@@ -267,7 +277,19 @@
       "title": "Mission templates"
     },
     "knowledge": {
-      "title": "Knowledge base"
+      "title": "Knowledge base",
+      "governance": {
+        "status": {
+          "draft": "Draft",
+          "in_review": "In review",
+          "published": "Published",
+          "archived": "Archived"
+        },
+        "audit": "Audit log",
+        "download_source": "Download source file",
+        "transcode_status": "Transcode status",
+        "transcript_status": "Transcript status"
+      }
     },
     "asset_editor": {
       "title": "Asset editor"
@@ -310,6 +332,14 @@
       },
       "blueprint": {
         "title": "AI Builder — Blueprint"
+      },
+      "status": {
+        "created": "Waiting for inputs",
+        "stt_running": "Processing voice note…",
+        "ready_for_inventory": "Ready for inventory review",
+        "inventory_ready": "Inventory approved",
+        "blueprint_ready": "Blueprint ready",
+        "failed": "Job failed — retry"
       }
     }
   }

@@ -20,5 +20,20 @@
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.5",
     "typescript": "5.4.5"
+  "name": "goldinkollar-quality-suite",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "lint": "node scripts/run-lint.js",
+    "test": "npm run test:unit && npm run test:contract",
+    "test:unit": "node --test tests/unit/*.spec.js",
+    "test:contract": "node --test tests/contract/*.spec.js",
+    "test:e2e": "node --test tests/e2e/*.spec.js",
+    "ci:i18n": "node scripts/check-i18n.js",
+    "ci:data-testids": "node scripts/check-data-testids.js",
+    "ci:rbac-tenancy": "node scripts/check-rbac-tenancy.js",
+    "ci:verify-contracts": "npm run test:contract",
+    "ci:full": "npm run lint && npm run ci:i18n && npm run ci:data-testids && npm run ci:rbac-tenancy && npm run test && npm run test:e2e"
   }
 }
