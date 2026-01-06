@@ -1,0 +1,16 @@
+{
+  "prefixes": {
+    "screen": "SCR-",
+    "element": "ELM-",
+    "action": "ACT-",
+    "api": "API-"
+  },
+  "dynamicSuffix": "__<entity_id>",
+  "referenceElements": [
+    "ELM-PUB-001-SUBMIT",
+    "ELM-LRN-014-TASK-OPEN__<um_id>",
+    "ELM-LRN-003-MARK-COMPLETE",
+    "ELM-LRN-025-SUBMIT",
+    "ELM-LRN-027-APPLY"
+  ]
+}
